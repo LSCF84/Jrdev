@@ -94,10 +94,22 @@ def handler():
 
     # 4. Envío del Correo
     try:
+        # LÓGICA CONDICIONAL DE CONEXIÓN
+        if SMTP_PORT == 465:
+            # Usar SMTP_SSL para el puerto 465 (SSL/TLS implícito)
+            server_class = smtplib.SMTP_SSL
+            print("INFO: Usando conexión SMTPS (puerto 465).")
+        else:
+            # Usar SMTP para cualquier otro puerto (ej. 587, STARTTLS explícito)
+            server_class = smtplib.SMTP
+            print(f"INFO: Usando conexión SMTP (puerto {SMTP_PORT}).")
+            
         # Conexión al servidor SMTP
-        # Usamos las variables leídas del entorno: SMTP_SERVER, SMTP_PORT
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
-            server.starttls()  # Protocolo seguro
+        with server_class(SMTP_SERVER, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
+            
+            # Si el puerto no es 465, intentamos starttls
+            if SMTP_PORT != 465:
+                server.starttls()
             
             # Autenticación: Usamos la clave sin espacios
             server.login(SENDER_EMAIL, SENDER_PASSWORD) 
@@ -121,11 +133,11 @@ def handler():
         }), 500)
         
     except Exception as e:
-        # Error general de conexión (timeout, servidor inaccesible, etc.)
+        # Error general de conexión (timeout, servidor inaccesible, bloqueo de red)
         print(f"Fallo general al enviar el correo: {e}")
-        # Comprobar si es un error de conexión no manejado
-        if "timeout" in str(e).lower() or "connection refused" in str(e).lower():
-            error_message = "Error de red: El servidor de correo no respondió (Timeout/Conexión)."
+        # Comprobar si es un error de conexión
+        if "timeout" in str(e).lower() or "connection refused" in str(e).lower() or "getaddrinfo failed" in str(e).lower():
+            error_message = "Error de red: El servidor de correo no respondió (Timeout/Conexión bloqueada). Intenta cambiar el puerto."
         else:
             error_message = "Error interno inesperado. Revisa logs de Vercel."
             

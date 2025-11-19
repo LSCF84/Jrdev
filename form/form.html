@@ -28,9 +28,19 @@
         width: 100%;
         background-color: #1e2124; /* Fondo del formulario más claro */
     }
-    /* Clase para la transición de la alerta */
+    /* Clases para la transición de la alerta */
     .alert-transition {
         transition: all 0.3s ease-in-out;
+    }
+    .alert-closed {
+        opacity: 0;
+        height: 0;
+        margin-bottom: 0 !important;
+    }
+    .alert-open {
+        opacity: 100;
+        height: auto;
+        margin-bottom: 1.5rem; /* mb-6 en Tailwind */
     }
 </style>
 
@@ -38,15 +48,11 @@
     <h1 class="text-3xl font-bold text-white mb-2">¡Empecemos a trabajar juntos!</h1>
     <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
 
-    <!--
-        El atributo 'action' se deja vacío o en "#" porque el envío lo maneja JavaScript.
-        El atributo 'id' es necesario para que JavaScript acceda al formulario.
-    -->
     <form id="contactForm" action="#" method="POST" class="space-y-6">
 
         <!-- Mensaje de Alerta (Éxito/Error) -->
-        <!-- Inicialmente oculto y sin altura -->
-        <div id="alertContainer" class="alert-transition opacity-0 h-0 overflow-hidden">
+        <!-- Usamos clases de estilo fijas y dinámicas para controlar la visibilidad y transición -->
+        <div id="alertContainer" class="alert-transition alert-closed">
             <!-- Contenido del mensaje se inyecta aquí -->
         </div>
 
@@ -119,45 +125,63 @@
     // Lógica JavaScript para el manejo del formulario
     // ----------------------------------------------------
     
-    // *** ¡ATENCIÓN! REEMPLAZA ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/fmoqgrkp'; 
+    // *** ¡ATENCIÓN! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
+    // Si esta URL es incorrecta o el formulario no existe, obtendrás el error 404 (Not Found).
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnwvdkl'; 
     // **********************************************************************
 
 
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Detener el envío tradicional del formulario (que causaba la redirección)
-        
+        event.preventDefault(); // Detener el envío tradicional
+
         const form = event.target;
         const button = document.getElementById('submitButton');
         const formData = new FormData(form);
 
+        // Ocultar cualquier alerta anterior al nuevo intento
+        hideAlert(); 
+
         // Mostrar estado de carga
         button.disabled = true;
         button.textContent = 'Enviando...';
-        hideAlert(); // Ocultar cualquier alerta anterior
 
         try {
-            // Envío de datos a Formspree usando Fetch
             const response = await fetch(FORMSPREE_ENDPOINT, {
-                method: 'POST', // Usamos POST, como requiere Formspree
+                method: 'POST', 
                 body: formData,
                 headers: {
-                    'Accept': 'application/json' // Esto es crucial para que Formspree responda con JSON y no redirija
+                    // Crucial para que Formspree responda con JSON y no redirija
+                    'Accept': 'application/json' 
                 }
             });
 
             if (response.ok) {
-                // Éxito: Mostrar mensaje y resetear formulario
+                // Éxito: Mostrar mensaje, luego resetear formulario y ocultar alerta después de 4 segundos.
                 showAlert('¡Mensaje enviado con éxito! Recibirás mi respuesta a la mayor brevedad.', 'success');
-                form.reset();
+                
+                // Retraso para que el usuario pueda leer el mensaje de éxito
+                setTimeout(() => {
+                    form.reset(); 
+                    hideAlert();
+                }, 4000); 
+
             } else {
-                // Fallo: Puede ser un error de Formspree (ej. URL incorrecta o formulario cerrado)
-                let message = 'Hubo un error al enviar el formulario. Verifica tu URL de Formspree.';
-                try {
-                    const errorData = await response.json();
-                    message = errorData.error || message;
-                } catch (e) {
-                    // Si no es un JSON, usamos el mensaje genérico.
+                // Fallo: El mensaje de error se queda visible hasta el próximo intento.
+                let message = 'Hubo un error al enviar el formulario. **Verifica que la URL de Formspree sea correcta.**';
+                
+                if (response.status === 404) {
+                     message = 'Error 404: Formulario no encontrado. Revisa la URL de Formspree.';
+                } else if (response.status === 422) {
+                    message = 'Error 422: Datos no válidos. Asegúrate de rellenar todos los campos requeridos.';
+                } else {
+                    try {
+                        // Intenta obtener un mensaje de error detallado de Formspree
+                        const errorData = await response.json();
+                        message = errorData.error || message;
+                    } catch (e) {
+                        // Si no es un JSON, usa el mensaje genérico de Formspree.
+                        message = `Error de Formspree (código: ${response.status}). Inténtalo de nuevo.`;
+                    }
                 }
                 showAlert(message, 'error');
             }
@@ -166,16 +190,14 @@
             console.error('Error de conexión o fetch:', error);
             showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
         } finally {
-            // Restablecer el botón (y añadir un pequeño delay para que el usuario vea el éxito/error)
-            setTimeout(() => {
-                button.disabled = false;
-                button.textContent = 'Enviar Solicitud';
-            }, 1000);
+            // Restablecer el botón inmediatamente después del intento, independientemente del resultado.
+            button.disabled = false;
+            button.textContent = 'Enviar Solicitud';
         }
     });
 
     /**
-     * Muestra una alerta de éxito o error en la interfaz (usa tus estilos Tailwind).
+     * Muestra una alerta de éxito o error en la interfaz.
      * @param {string} message - El mensaje a mostrar.
      * @param {'success'|'error'} type - El tipo de alerta.
      */
@@ -199,10 +221,13 @@
                 <p class="text-sm font-medium">${message}</p>
             </div>
         `;
+        
+        // 1. Inyectar contenido
         alertContainer.innerHTML = alertHTML;
-        // Hacer visible la alerta
-        alertContainer.classList.remove('opacity-0', 'h-0');
-        alertContainer.classList.add('opacity-100', 'h-auto', 'mb-4');
+        
+        // 2. Transicionar a estado abierto
+        alertContainer.classList.remove('alert-closed');
+        alertContainer.classList.add('alert-open');
     }
 
     /**
@@ -210,14 +235,17 @@
      */
     function hideAlert() {
         const alertContainer = document.getElementById('alertContainer');
-        alertContainer.classList.remove('opacity-100', 'h-auto', 'mb-4');
-        alertContainer.classList.add('opacity-0', 'h-0');
-        // Usar un timeout para limpiar el contenido después de la transición
+        
+        // 1. Transicionar a estado cerrado
+        alertContainer.classList.remove('alert-open');
+        alertContainer.classList.add('alert-closed');
+
+        // 2. Limpiar el contenido después de que la transición haya terminado (300ms)
         setTimeout(() => {
             alertContainer.innerHTML = '';
-        }, 300);
+        }, 300); 
     }
 
-    // Inicialización: Ocultar si está visible por alguna razón al cargar
+    // Inicialización: Asegurar que esté oculto al cargar
     hideAlert();
 </script>

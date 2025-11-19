@@ -6,7 +6,7 @@
     <title>Contacto - Servicios IT</title>
     <!-- Carga de Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuración personalizada de Tailwind -->
+    <!-- Configuración personalizada de Tailwind - Ampliamos para incluir todos los colores de acento dinámicos -->
     <script>
         tailwind.config = {
             theme: {
@@ -14,7 +14,6 @@
                     colors: {
                         'primary-dark': '#111827', // Gris muy oscuro/casi negro para fondo
                         'secondary-dark': '#1F2937', // Gris oscuro para tarjetas
-                        'accent-blue': '#3B82F6', // Azul brillante para acentos
                         'text-light': '#F9FAFB', // Blanco roto para texto
                         'text-muted': '#D1D5DB', // Gris claro para texto secundario
                     },
@@ -26,20 +25,67 @@
         }
     </script>
     <style>
-        /* Estilos personalizados para el formulario */
+        /* Definición de la variable CSS para el color de acento dinámico (por defecto azul) */
+        :root {
+            --accent-color-base: blue;
+            --accent-color-500: #3B82F6; /* blue-500 */
+            --accent-color-600: #2563EB; /* blue-600 */
+            --accent-color-400: #60A5FA; /* blue-400 (para texto e indicadores) */
+            --accent-ring-color: rgba(59, 130, 246, 0.5); /* Anillo de foco */
+        }
+
+        /* Estilos base para el cuerpo */
         body {
             background-color: #111827;
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
         }
-        /* Estilo para los campos de foco */
+
+        /* Estilo para los campos de foco usando variables dinámicas */
         input:focus, textarea:focus, select:focus {
-            border-color: #3B82F6 !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Anillo azul */
+            border-color: var(--accent-color-500) !important;
+            box-shadow: 0 0 0 3px var(--accent-ring-color);
             outline: none;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Clase dinámica para el botón de envío */
+        .btn-accent {
+            background-color: var(--accent-color-500);
+            box-shadow: 0 10px 15px -3px rgba(var(--accent-color-500), 0.5), 0 4px 6px -2px rgba(var(--accent-color-500), 0.05);
+        }
+        .btn-accent:hover {
+            background-color: var(--accent-color-600) !important;
+        }
+        .btn-accent:focus {
+            box-shadow: 0 0 0 4px rgba(var(--accent-color-500), 0.5);
+        }
+        
+        /* Clase dinámica para enlaces y texto indicador */
+        .text-accent {
+            color: var(--accent-color-400);
+        }
+        .text-accent:hover {
+            color: var(--accent-color-500);
+        }
+
+        /* Estilo para el mensaje de éxito */
+        #success-message {
+            background-color: #166534; /* dark green */
+            border-color: #4ADE80; /* light green */
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Selector de Tema Flotante (Nuevo elemento) -->
+    <div id="theme-switcher" class="fixed top-4 right-4 z-50 p-2 bg-secondary-dark rounded-full shadow-xl border border-gray-700 flex space-x-2">
+        <span class="text-text-muted text-xs mr-2 self-center hidden sm:block">Tema:</span>
+        <div data-color="blue" class="color-swatch bg-blue-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-blue-500 transition duration-150 ease-in-out" title="Azul (Defecto)"></div>
+        <div data-color="emerald" class="color-swatch bg-emerald-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-emerald-500 transition duration-150 ease-in-out" title="Verde"></div>
+        <div data-color="violet" class="color-swatch bg-violet-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-violet-500 transition duration-150 ease-in-out" title="Púrpura"></div>
+        <div data-color="orange" class="color-swatch bg-orange-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-orange-500 transition duration-150 ease-in-out" title="Naranja"></div>
+    </div>
 
     <!-- Contenedor Principal del Formulario -->
     <div class="w-full max-w-2xl bg-secondary-dark p-8 md:p-10 rounded-xl shadow-2xl border border-gray-700">
@@ -59,7 +105,7 @@
         <!-- Formulario (visible por defecto) -->
         <form id="contact-form" class="space-y-6">
 
-            <!-- Campo 1: Nombre Completo (similar a Tally.so) -->
+            <!-- Campo 1: Nombre Completo -->
             <div>
                 <label for="full_name" class="block text-sm font-medium text-text-muted mb-1">Nombre completo <span class="text-red-500">*</span></label>
                 <input type="text" id="full_name" name="full_name" required
@@ -67,7 +113,7 @@
                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out">
             </div>
 
-            <!-- Campo 2: Email (similar a Tally.so) -->
+            <!-- Campo 2: Email -->
             <div>
                 <label for="email" class="block text-sm font-medium text-text-muted mb-1">Email <span class="text-red-500">*</span></label>
                 <input type="email" id="email" name="email" required
@@ -75,13 +121,13 @@
                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out">
             </div>
 
-            <!-- Campo 3: ¿Qué necesitas? (Similar a Tally.so - Tipo de proyecto) -->
+            <!-- Campo 3: ¿Qué necesitas? -->
             <div>
                 <label for="project_type" class="block text-sm font-medium text-text-muted mb-1">¿En qué puedo ayudarte? <span class="text-red-500">*</span></label>
                 <select id="project_type" name="project_type" required
                         class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light transition duration-150 ease-in-out appearance-none">
                     <option value="" disabled selected class="text-gray-400">Selecciona el tipo de servicio</option>
-                    <option value="consultoria">Entrecista para trabajar en su empresa</option>
+                    <option value="consultoria">Entrevista, para trabajar en tu empresa</option>
                     <option value="consultoria">Consultoría IT y Optimización de Sistemas</option>
                     <option value="cloud_infra">Infraestructura Cloud (AWS/Azure) y Virtualización</option>
                     <option value="soporte">Soporte Técnico (N3/N4) y Troubleshooting</option>
@@ -94,7 +140,7 @@
                 </div>
             </div>
 
-            <!-- Campo 4: Cuéntame más sobre el proyecto (Similar a Tally.so) -->
+            <!-- Campo 4: Cuéntame más sobre el proyecto -->
             <div>
                 <label for="project_details" class="block text-sm font-medium text-text-muted mb-1">Cuéntame más detalles sobre lo que necesitas:</label>
                 <textarea id="project_details" name="project_details" rows="4"
@@ -102,9 +148,9 @@
                           class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out"></textarea>
             </div>
 
-            <!-- Campo 5: ¿Cuál es el presupuesto estimado? (Similar a Tally.so) -->
+            <!-- Campo 5: ¿Cuál es el presupuesto estimado? -->
             <div>
-                <label for="budget" class="block text-sm font-medium text-text-muted mb-1">Presupuesto estimado (Ejemplo de integración)</label>
+                <label for="budget" class="block text-sm font-medium text-text-muted mb-1">Presupuesto estimado (Esto es un ejemplo de formulario)</label>
                 <select id="budget" name="budget"
                         class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light transition duration-150 ease-in-out appearance-none">
                     <option value="" disabled selected class="text-gray-400">Selecciona un rango</option>
@@ -120,27 +166,113 @@
                 </div>
             </div>
 
-            <!-- Botón de Envío -->
+            <!-- Botón de Envío - Usando clase dinámica 'btn-accent' -->
             <button type="submit"
                     id="submit-button"
-                    class="w-full py-3 px-4 border border-transparent rounded-lg text-lg font-semibold text-text-light bg-accent-blue hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out shadow-lg shadow-blue-500/50">
+                    class="w-full py-3 px-4 border border-transparent rounded-lg text-lg font-semibold text-text-light btn-accent focus:outline-none focus:ring-4 focus:ring-opacity-50 transition duration-150 ease-in-out shadow-lg">
                 Enviar Solicitud
             </button>
-            <p id="loading-indicator" class="hidden text-center text-accent-blue text-sm">Enviando...</p>
+            <p id="loading-indicator" class="hidden text-center text-sm text-accent">Enviando...</p>
 
         </form>
 
         <!-- Pie de página con enlace de vuelta al portfolio/CV -->
         <footer class="mt-8 text-center text-xs text-gray-500">
             <p>
-                Volver al <a href="index.html" class="text-accent-blue hover:text-blue-400 underline">Portfolio Principal</a>.
+                Volver al <a href="index.html" class="text-accent hover:text-blue-400 underline transition duration-150 ease-in-out">Portfolio Principal</a>.
             </p>
         </footer>
     </div>
 
     <script>
+        // Mapeo de nombres de color a valores HEX y utilidades de Tailwind
+        const colorMap = {
+            'blue': {
+                '500': '#3B82F6', // blue-500
+                '600': '#2563EB', // blue-600 (hover)
+                '400': '#60A5FA', // blue-400 (texto/enlace)
+                'ring': 'rgba(59, 130, 246, 0.5)',
+            },
+            'emerald': {
+                '500': '#10B981', // emerald-500
+                '600': '#059669', // emerald-600 (hover)
+                '400': '#34D399', // emerald-400 (texto/enlace)
+                'ring': 'rgba(16, 185, 129, 0.5)',
+            },
+            'violet': {
+                '500': '#8B5CF6', // violet-500
+                '600': '#7C3AED', // violet-600 (hover)
+                '400': '#A78BFA', // violet-400 (texto/enlace)
+                'ring': 'rgba(139, 92, 246, 0.5)',
+            },
+            'orange': {
+                '500': '#F97316', // orange-500
+                '600': '#EA580C', // orange-600 (hover)
+                '400': '#FB923C', // orange-400 (texto/enlace)
+                'ring': 'rgba(249, 115, 22, 0.5)',
+            }
+        };
+
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const root = document.documentElement; // Acceder al :root para variables CSS
+
+        /**
+         * Aplica el tema de color seleccionado, actualizando variables CSS y localStorage.
+         * @param {string} colorName - El nombre del color (ej: 'blue', 'emerald').
+         */
+        function applyTheme(colorName) {
+            const colors = colorMap[colorName];
+            if (!colors) return;
+
+            // 1. Actualizar variables CSS en :root
+            root.style.setProperty('--accent-color-base', colorName);
+            root.style.setProperty('--accent-color-500', colors['500']);
+            root.style.setProperty('--accent-color-600', colors['600']);
+            root.style.setProperty('--accent-color-400', colors['400']);
+            root.style.setProperty('--accent-ring-color', colors['ring']);
+
+            // 2. Actualizar el indicador de carga y el enlace de footer (usando la clase dinámica)
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const footerLink = document.querySelector('footer a');
+            
+            // Reemplazar la clase de color para el anillo de foco del botón de envío
+            const submitButton = document.getElementById('submit-button');
+            submitButton.classList.forEach(cls => {
+                if (cls.startsWith('focus:ring-')) {
+                    submitButton.classList.remove(cls);
+                }
+            });
+            // El anillo de foco está ahora manejado por la variable CSS en la clase .btn-accent y en el CSS de los inputs.
+
+            // 3. Guardar en localStorage
+            localStorage.setItem('themeColor', colorName);
+
+            // 4. Actualizar el ring visual en el selector
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.classList.remove('ring-4', 'ring-offset-2');
+                if (swatch.dataset.color === colorName) {
+                    swatch.classList.add('ring-4', 'ring-offset-2');
+                }
+            });
+        }
+
+        // --- Lógica de Inicialización y Eventos ---
+
+        // 1. Cargar tema al inicio
+        const savedTheme = localStorage.getItem('themeColor') || 'blue'; // Por defecto, azul
+        applyTheme(savedTheme);
+
+        // 2. Añadir event listeners a los selectores de color
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                const color = swatch.dataset.color;
+                applyTheme(color);
+            });
+        });
+
+        // 3. Lógica de envío de formulario (mantener la original)
         document.getElementById('contact-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Detiene el envío real del formulario
+            event.preventDefault();
 
             const form = document.getElementById('contact-form');
             const successMessage = document.getElementById('success-message');
@@ -154,17 +286,18 @@
             loadingIndicator.classList.remove('hidden');
 
             // 2. Simular el tiempo de envío (2 segundos)
-            // En una aplicación real, aquí harías una llamada 'fetch' a un endpoint.
             setTimeout(() => {
                 // 3. Simulación de éxito
                 loadingIndicator.classList.add('hidden');
                 form.classList.add('hidden'); // Ocultar el formulario
                 successMessage.classList.remove('hidden'); // Mostrar el mensaje de éxito
 
-                // Opcional: limpiar los campos (aunque ya está oculto)
-                form.reset();
+                // Restablecer el botón para el próximo uso si se vuelve visible
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitButton.textContent = 'Enviar Solicitud';
 
-            }, 2000); // 2 segundos de simulación
+            }, 2000);
         });
     </script>
 </body>

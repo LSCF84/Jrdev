@@ -1,48 +1,70 @@
-# Este archivo DEBE estar en un subdirectorio llamado 'api/' para que Vercel lo detecte.
 import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
-# Vercel usa la función 'handler' para Serverless Functions en Python
-# Importamos Flask para manejar la estructura de la petición web POST
-from flask import Flask, request, jsonify, make_response
-
-# --- Configuration ---
-# IMPORTANTE: En Vercel, estas variables de entorno se configuran en el Dashboard.
-
-SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
-SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
-SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
-
-# La dirección de correo que recibirá las solicitudes del formulario
-RECIPIENT_EMAIL = os.environ.get("RECIPIENT_EMAIL", "your_receiving_email@example.com") 
+# Importamos make_response para controlar mejor los headers de la respuesta
+from flask import Flask, request, jsonify, make_response 
 
 # Inicializar Flask (necesario para manejar la solicitud HTTP)
 app = Flask(__name__)
 
-def send_form_email(form_data):
-    """
-    Conecta a un servidor SMTP y envía un correo electrónico con el contenido del formulario.
-    """
-    if not SENDER_EMAIL or not SENDER_PASSWORD:
-        print("ERROR: Credenciales de correo no configuradas en Vercel.")
-        return False
+# --- Constantes de Configuración de SMTP (Fijas para Gmail) ---
+# Usamos Gmail por defecto y el puerto estándar para TLS
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_TIMEOUT = 15 # Aumentamos el timeout a 15 segundos
 
-    # 1. Extracción de datos del formulario (usando los nombres del formulario en form.html)
-    name = form_data.get('name', 'N/A')
-    email = form_data.get('_replyto', 'N/A') # Campo del email del remitente
-    project_type = form_data.get('Tipo de Proyecto', 'N/A')
+@app.route('/api/send_email', methods=['POST'])
+def handler():
+    """
+    Ruta principal (handler) de la Función Serverless de Vercel.
+    Procesa el POST del formulario, verifica la configuración y envía el correo.
+    """
+    
+    # 1. Obtener y verificar variables de entorno CRUCIALES (Configuradas en Vercel Dashboard)
+    SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
+    SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
+    RECIPIENT_EMAIL = os.environ.get("RECIPIENT_EMAIL")
+
+    if not all([SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL]):
+        print("ERROR: Faltan variables de entorno cruciales (SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL).")
+        response = make_response(jsonify({
+            "status": "error", 
+            "message": "Error de configuración interna. Faltan credenciales de correo en Vercel."
+        }), 500)
+        # Añadir encabezado CORS a la respuesta de error
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+    # 2. Extracción y Validación de datos del formulario
+    form_data = request.form
+    
+    # Campos obligatorios desde el HTML
+    name = form_data.get('name')
+    reply_to = form_data.get('_replyto') # El email del cliente (CRUCIAL para Reply-To)
+    project_type = form_data.get('Tipo de Proyecto')
+    
+    # Campos opcionales
     project_details = form_data.get('Detalles del Proyecto', 'No se proporcionaron detalles')
     budget = form_data.get('Presupuesto Estimado', 'No especificado')
-    Reply-To
-    # 2. Construir el cuerpo del correo
+
+    # Validación de datos del formulario (si faltan campos obligatorios)
+    if not all([name, reply_to, project_type]):
+        response = make_response(jsonify({
+            "status": "error",
+            "message": "Faltan datos obligatorios (Nombre, Email o Tipo de Proyecto)."
+        }), 400)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+    # 3. Construcción del Cuerpo del Mensaje
+    subject = f"Nuevo Contacto - {project_type} - De: {name}"
+    
     body = f"""
     ¡Nueva Solicitud de Contacto desde el Formulario Web!
     -----------------------------------------------------
     Nombre Completo: {name}
-    Correo Electrónico: {email}
+    Correo Electrónico: {reply_to}
     
     Tipo de Proyecto/Servicio: {project_type}
     Presupuesto Estimado: {budget}
@@ -51,74 +73,50 @@ def send_form_email(form_data):
     {project_details}
     -----------------------------------------------------
     """
-    
-    # 3. Crear el objeto de mensaje de correo
+
     msg = MIMEMultipart()
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
-    msg['Subject'] = f"Nueva Solicitud de Contacto - {name} ({project_type})"
-    msg['Reply-To'] = email
+    msg['Subject'] = subject
+    # CRUCIAL: Usar Reply-To para que al responder al correo, respondas al cliente
+    msg['Reply-To'] = reply_to 
     msg.attach(MIMEText(body, 'plain'))
+
+    # 4. Envío del Correo
     try:
-        # 4. Conexión y envío
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.ehlo()
-            server.starttls()
+        # Conexión al servidor SMTP
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
+            server.starttls()  # Protocolo seguro
+            
+            # Autenticación: ESTE es el punto que falla si SENDER_PASSWORD no es la App Password
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            
+            # Envío
             server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
             print(f"Correo enviado exitosamente a {RECIPIENT_EMAIL}")
-            return True
+
+        # Éxito: Devolver JSON 200 OK
+        response = make_response(jsonify({
+            "status": "success", 
+            "message": "¡Solicitud enviada con éxito!"
+        }), 200)
+
+    except smtplib.SMTPAuthenticationError as e:
+        # Error específico de credenciales (clave incorrecta o bloqueada)
+        print(f"Error de autenticación SMTP: {e}")
+        response = make_response(jsonify({
+            "status": "error",
+            "message": "Error 500: Fallo en credenciales. Usa la Contraseña de Aplicación de Google."
+        }), 500)
+        
     except Exception as e:
-        print(f"Fallo al enviar el correo: {e}")
-        return False
+        # Error general de conexión (timeout, servidor inaccesible)
+        print(f"Fallo general al enviar el correo: {e}")
+        response = make_response(jsonify({
+            "status": "error",
+            "message": "Error al conectar o enviar el correo. Revisa logs de Vercel."
+        }), 500)
 
-# La función handler de Vercel (la que se ejecuta al recibir la petición)
-@app.route('/api/send_email', methods=['POST'])
-def handler():
-    """
-    Ruta de Flask/Vercel Serverless Function para recibir la solicitud POST.
-    """
-    # La función handler de Vercel (la que se ejecuta al recibir la petición)
-@app.route('/api/send_email', methods=['POST'])
-def handler():
-    """
-    Ruta de Flask/Vercel Serverless Function para recibir la solicitud POST.
-    """
-    # Request.form extrae datos del formulario multipart/form-data
-    form_data = request.form
-    
-    if not form_data:
-        # Usamos make_response para poder añadir el header CORS incluso en errores 400
-        response = make_response(jsonify({"message": "No se recibieron datos del formulario."}), 400)
-    
-    else:
-        success = send_form_email(form_data)
-        
-        if success:
-            # Respuesta de éxito
-            response = make_response(jsonify({"message": "¡Solicitud enviada con éxito!"}), 200)
-        else:
-            # Respuesta de error
-            response = make_response(jsonify({"message": "El servidor falló al enviar el correo. Revise logs y variables de entorno."}), 500)
-
-    # CORRECCIÓN CRÍTICA: Añadir el header CORS en todas las respuestas
-    response.headers.add('Access-Control-Allow-Origin', '*') 
+    # 5. Añadir el encabezado CORS (Access-Control-Allow-Origin) a la respuesta final
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
-    # Request.form extrae datos del formulario multipart/form-data
-    form_data = request.form
-    
-    if not form_data:
-        return jsonify({"message": "No se recibieron datos del formulario."}), 400
-        
-    success = send_form_email(form_data)
-    
-    if success:
-        response = make_response(jsonify({"message": "¡Solicitud enviada con éxito!"}), 200)
-        else:
-    # Respuesta de error
-        response.headers.add('Access-Control-Allow-Origin', '*') # CORRECCIÓN CRÍTICA
-    return response
-# Esta línea es para compatibilidad con Vercel
-if __name__ == '__main__':
-    # Esto solo se ejecuta si se inicia localmente. Vercel llama a la función `handler` directamente.
-    app.run(debug=True, port=3000)

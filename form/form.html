@@ -28,7 +28,8 @@
         width: 100%;
         background-color: #1e2124; /* Fondo del formulario más claro */
     }
-    .alert-message {
+    /* Clase para la transición de la alerta */
+    .alert-transition {
         transition: all 0.3s ease-in-out;
     }
 </style>
@@ -38,15 +39,16 @@
     <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
 
     <!--
-        *** CAMBIO CLAVE AQUÍ: Se utiliza la URL de Formspree para el envío directo. ***
-        * Reemplaza 'https://formspree.io/f/fmoqgrkp' con tu URL real.
-        * El envío será gestionado por el navegador, no por JavaScript, lo que evita el error del Serverless Function.
-        * El campo '_replyto' es esencial para que Formspree use ese email como respuesta.
+        El atributo 'action' se deja vacío o en "#" porque el envío lo maneja JavaScript.
+        El atributo 'id' es necesario para que JavaScript acceda al formulario.
     -->
-    <form action="https://formspree.io/f/xnnwvdkl" method="POST" class="space-y-6">
+    <form id="contactForm" action="#" method="POST" class="space-y-6">
 
-        <!-- Este div ya no se usa para mostrar errores, ya que Formspree gestiona la respuesta -->
-        <div id="alertContainer" class="hidden"></div> 
+        <!-- Mensaje de Alerta (Éxito/Error) -->
+        <!-- Inicialmente oculto y sin altura -->
+        <div id="alertContainer" class="alert-transition opacity-0 h-0 overflow-hidden">
+            <!-- Contenido del mensaje se inyecta aquí -->
+        </div>
 
         <!-- Nombre Completo -->
         <div>
@@ -55,11 +57,11 @@
                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
         </div>
 
-        <!-- Email (CRUCIAL para Formspree: usa '_replyto') -->
+        <!-- Email (CRUCIAL: usa '_replyto' para Formspree) -->
         <div>
             <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
             <input type="email" id="email" name="_replyto" required 
-                   placeholder="djser69@gmail.com"
+                   placeholder="tu_correo@dominio.com"
                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
         </div>
 
@@ -112,7 +114,110 @@
     </p>
 </div>
 
-<!-- 
-    Se elimina el JavaScript anterior que manejaba el 'fetch' y las alertas,
-    ya que Formspree ahora gestiona la respuesta directamente con una página de éxito.
--->
+<script>
+    // ----------------------------------------------------
+    // Lógica JavaScript para el manejo del formulario
+    // ----------------------------------------------------
+    
+    // *** ¡ATENCIÓN! REEMPLAZA ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/fmoqgrkp'; 
+    // **********************************************************************
+
+
+    document.getElementById('contactForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Detener el envío tradicional del formulario (que causaba la redirección)
+        
+        const form = event.target;
+        const button = document.getElementById('submitButton');
+        const formData = new FormData(form);
+
+        // Mostrar estado de carga
+        button.disabled = true;
+        button.textContent = 'Enviando...';
+        hideAlert(); // Ocultar cualquier alerta anterior
+
+        try {
+            // Envío de datos a Formspree usando Fetch
+            const response = await fetch(FORMSPREE_ENDPOINT, {
+                method: 'POST', // Usamos POST, como requiere Formspree
+                body: formData,
+                headers: {
+                    'Accept': 'application/json' // Esto es crucial para que Formspree responda con JSON y no redirija
+                }
+            });
+
+            if (response.ok) {
+                // Éxito: Mostrar mensaje y resetear formulario
+                showAlert('¡Mensaje enviado con éxito! Recibirás mi respuesta a la mayor brevedad.', 'success');
+                form.reset();
+            } else {
+                // Fallo: Puede ser un error de Formspree (ej. URL incorrecta o formulario cerrado)
+                let message = 'Hubo un error al enviar el formulario. Verifica tu URL de Formspree.';
+                try {
+                    const errorData = await response.json();
+                    message = errorData.error || message;
+                } catch (e) {
+                    // Si no es un JSON, usamos el mensaje genérico.
+                }
+                showAlert(message, 'error');
+            }
+
+        } catch (error) {
+            console.error('Error de conexión o fetch:', error);
+            showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
+        } finally {
+            // Restablecer el botón (y añadir un pequeño delay para que el usuario vea el éxito/error)
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = 'Enviar Solicitud';
+            }, 1000);
+        }
+    });
+
+    /**
+     * Muestra una alerta de éxito o error en la interfaz (usa tus estilos Tailwind).
+     * @param {string} message - El mensaje a mostrar.
+     * @param {'success'|'error'} type - El tipo de alerta.
+     */
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        let bgColor, iconSvg;
+        
+        if (type === 'success') {
+            bgColor = 'bg-green-600';
+            iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />';
+        } else {
+            bgColor = 'bg-red-600';
+            iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
+        }
+
+        const alertHTML = `
+            <div class="${bgColor} text-white p-4 rounded-lg flex items-center shadow-md">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    ${iconSvg}
+                </svg>
+                <p class="text-sm font-medium">${message}</p>
+            </div>
+        `;
+        alertContainer.innerHTML = alertHTML;
+        // Hacer visible la alerta
+        alertContainer.classList.remove('opacity-0', 'h-0');
+        alertContainer.classList.add('opacity-100', 'h-auto', 'mb-4');
+    }
+
+    /**
+     * Oculta el contenedor de alerta.
+     */
+    function hideAlert() {
+        const alertContainer = document.getElementById('alertContainer');
+        alertContainer.classList.remove('opacity-100', 'h-auto', 'mb-4');
+        alertContainer.classList.add('opacity-0', 'h-0');
+        // Usar un timeout para limpiar el contenido después de la transición
+        setTimeout(() => {
+            alertContainer.innerHTML = '';
+        }, 300);
+    }
+
+    // Inicialización: Ocultar si está visible por alguna razón al cargar
+    hideAlert();
+</script>

@@ -1,361 +1,118 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto - Servicios IT</title>
-    <!-- Carga de Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuración personalizada de Tailwind - Ampliamos para incluir todos los colores de acento dinámicos -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-dark': '#111827', // Gris muy oscuro/casi negro para fondo
-                        'secondary-dark': '#1F2937', // Gris oscuro para tarjetas
-                        'text-light': '#F9FAFB', // Blanco roto para texto
-                        'text-muted': '#D1D5DB', // Gris claro para texto secundario
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Definición de la variable CSS para el color de acento dinámico (por defecto azul) */
-        :root {
-            --accent-color-base: blue;
-            --accent-color-500: #3B82F6; /* blue-500 */
-            --accent-color-600: #2563EB; /* blue-600 */
-            --accent-color-400: #60A5FA; /* blue-400 (para texto e indicadores) */
-            --accent-ring-color: rgba(59, 130, 246, 0.5); /* Anillo de foco */
-        }
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#FF5733', // Naranja/Rojo vibrante para CTA
+                    'secondary': '#343A40', // Gris oscuro para fondo de formulario
+                    'accent': '#17A2B8', // Azul brillante
+                },
+            },
+        },
+    }
+</script>
+<style>
+    /* Estilos generales para Inter y centrado */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0d1117; /* Fondo oscuro */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    .form-container {
+        max-width: 550px;
+        width: 100%;
+        background-color: #1e2124; /* Fondo del formulario más claro */
+    }
+    .alert-message {
+        transition: all 0.3s ease-in-out;
+    }
+</style>
 
-        /* Estilos base para el cuerpo */
-        body {
-            background-color: #111827;
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s ease;
-        }
+<div class="form-container rounded-xl shadow-2xl p-6 md:p-10">
+    <h1 class="text-3xl font-bold text-white mb-2">¡Empecemos a trabajar juntos!</h1>
+    <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
 
-        /* Estilo para los campos de foco usando variables dinámicas */
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--accent-color-500) !important;
-            box-shadow: 0 0 0 3px var(--accent-ring-color);
-            outline: none;
-            transition: box-shadow 0.3s ease, border-color 0.3s ease;
-        }
+    <!--
+        *** CAMBIO CLAVE AQUÍ: Se utiliza la URL de Formspree para el envío directo. ***
+        * Reemplaza 'https://formspree.io/f/fmoqgrkp' con tu URL real.
+        * El envío será gestionado por el navegador, no por JavaScript, lo que evita el error del Serverless Function.
+        * El campo '_replyto' es esencial para que Formspree use ese email como respuesta.
+    -->
+    <form action="https://formspree.io/f/xnnwvdkl" method="POST" class="space-y-6">
 
-        /* Clase dinámica para el botón de envío */
-        .btn-accent {
-            background-color: var(--accent-color-500);
-            box-shadow: 0 10px 15px -3px rgba(var(--accent-color-500), 0.5), 0 4px 6px -2px rgba(var(--accent-color-500), 0.05);
-        }
-        .btn-accent:hover {
-            background-color: var(--accent-color-600) !important;
-        }
-        .btn-accent:focus {
-            box-shadow: 0 0 0 4px rgba(var(--accent-color-500), 0.5);
-        }
+        <!-- Este div ya no se usa para mostrar errores, ya que Formspree gestiona la respuesta -->
+        <div id="alertContainer" class="hidden"></div> 
+
+        <!-- Nombre Completo -->
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-300">Nombre completo *</label>
+            <input type="text" id="name" name="Nombre completo" required
+                   class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
+        </div>
+
+        <!-- Email (CRUCIAL para Formspree: usa '_replyto') -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
+            <input type="email" id="email" name="_replyto" required 
+                   placeholder="djser69@gmail.com"
+                   class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
+        </div>
+
+        <!-- Tipo de Proyecto -->
+        <div>
+            <label for="project_type" class="block text-sm font-medium text-gray-300">¿En qué puedo ayudarte? *</label>
+            <select id="project_type" name="Tipo de Proyecto" required
+                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
+                <option value="">Selecciona una opción</option>
+                <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
+                <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
+                <option value="Integración API/Backend">Integración API/Backend</option>
+                <option value="Entrevista, para trabajar en tu empresa">Entrevista, para trabajar en tu empresa</option>
+                <option value="Otro">Otro</option>
+            </select>
+        </div>
+
+        <!-- Detalles del Proyecto -->
+        <div>
+            <label for="project_details" class="block text-sm font-medium text-gray-300">Cuéntame más detalles sobre lo que necesitas:</label>
+            <textarea id="project_details" name="Detalles del Proyecto" rows="4" 
+                      class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary"></textarea>
+        </div>
+
+        <!-- Presupuesto Estimado -->
+        <div>
+            <label for="budget" class="block text-sm font-medium text-gray-300">Presupuesto estimado (Opcional)</label>
+            <select id="budget" name="Presupuesto Estimado"
+                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
+                <option value="No especificado">Selecciona un rango</option>
+                <option value="Menos de 1000€">Menos de 1000€</option>
+                <option value="1000€ - 3000€">1000€ - 3000€</option>
+                <option value="3000€ - 6000€">3000€ - 6000€</option>
+                <option value="Más de 6000€">Más de 6000€</option>
+            </select>
+        </div>
+
+        <!-- Botón de Envío -->
+        <button type="submit" id="submitButton"
+                class="w-full py-3 bg-primary text-white font-semibold rounded-lg shadow-lg hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-800 transition duration-150 ease-in-out">
+            Enviar Solicitud
+        </button>
         
-        /* Clase dinámica para enlaces y texto indicador */
-        .text-accent {
-            color: var(--accent-color-400);
-        }
-        .text-accent:hover {
-            color: var(--accent-color-500);
-        }
+        <!-- Campo Honeypot Oculto (Anti-spam de Formspree) -->
+        <input type="text" name="_gotcha" style="display:none" />
+    </form>
+    
+    <p class="text-center text-sm text-gray-500 mt-4">
+        Volver al <a href="#" class="text-primary hover:text-orange-600">Portafolio Principal</a>
+    </p>
+</div>
 
-        /* Estilo para el mensaje de éxito */
-        #success-message {
-            background-color: #166534; /* dark green */
-            border-color: #4ADE80; /* light green */
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center p-4">
-
-    <!-- Selector de Tema Flotante (Nuevo elemento) -->
-    <div id="theme-switcher" class="fixed top-4 right-4 z-50 p-2 bg-secondary-dark rounded-full shadow-xl border border-gray-700 flex space-x-2">
-        <span class="text-text-muted text-xs mr-2 self-center hidden sm:block">Tema:</span>
-        <div data-color="blue" class="color-swatch bg-blue-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-blue-500 transition duration-150 ease-in-out" title="Azul (Defecto)"></div>
-        <div data-color="emerald" class="color-swatch bg-emerald-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-emerald-500 transition duration-150 ease-in-out" title="Verde"></div>
-        <div data-color="violet" class="color-swatch bg-violet-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-violet-500 transition duration-150 ease-in-out" title="Púrpura"></div>
-        <div data-color="orange" class="color-swatch bg-orange-500 w-6 h-6 rounded-full cursor-pointer hover:ring-2 ring-offset-2 ring-offset-secondary-dark ring-orange-500 transition duration-150 ease-in-out" title="Naranja"></div>
-    </div>
-
-    <!-- Contenedor Principal del Formulario -->
-    <div class="w-full max-w-2xl bg-secondary-dark p-8 md:p-10 rounded-xl shadow-2xl border border-gray-700">
-
-        <!-- Encabezado -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-extrabold text-text-light">¡Empecemos a trabajar juntos! (En construccion)</h1>
-            <p class="mt-2 text-text-muted">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
-        </header>
-
-        <!-- Mensaje de Éxito (oculto por defecto) -->
-        <!-- NOTA: Hemos eliminado la mención a Formspree del mensaje de éxito -->
-        <div id="success-message" class="hidden bg-green-900 border border-green-700 text-text-light p-4 rounded-lg mb-6 text-center">
-            <p class="font-semibold">¡Gracias por tu mensaje!</p>
-            <p class="text-sm">Tu solicitud ha sido enviada con éxito y me pondré en contacto contigo pronto.</p>
-        </div>
-
-        <!-- Mensaje de Error (oculto por defecto) -->
-        <div id="error-message" class="hidden bg-red-900 border border-red-700 text-text-light p-4 rounded-lg mb-6 text-center">
-            <p class="font-semibold">¡Error al enviar!</p>
-            <p class="text-sm">Hubo un problema. Por favor, inténtalo de nuevo o contacta directamente por correo.</p>
-        </div>
-
-        <!-- Formulario (visible por defecto) -->
-        <form id="contact-form" 
-              action="/api/send_email" <!-- CORRECCIÓN CRÍTICA: Apuntando a la función Serverless de Vercel -->
-              method="POST" 
-              class="space-y-6">
-
-            <!-- CAMBIO: Ya no necesitamos el campo oculto de Formspree (_subject) -->
-            <!-- <input type="hidden" name="_subject" value="Nueva Solicitud de Contacto - Formulario Web"> -->
-            
-            <!-- Campo 1: Nombre Completo -->
-            <div>
-                <label for="full_name" class="block text-sm font-medium text-text-muted mb-1">Nombre completo <span class="text-red-500">*</span></label>
-                <!-- Usamos 'name="name"' para que el script Python lo reconozca -->
-                <input type="text" id="full_name" name="name" required
-                        placeholder="Tu nombre y apellido"
-                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out">
-            </div>
-
-            <!-- Campo 2: Email -->
-            <div>
-                <label for="email" class="block text-sm font-medium text-text-muted mb-1">Email <span class="text-red-500">*</span></label>
-                 <!-- Usamos 'name="_replyto"' para que el script Python lo reconozca como Reply-To -->
-                <input type="email" id="email" name="_replyto" required
-                        placeholder="ejemplo@dominio.com"
-                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out">
-            </div>
-
-            <!-- Campo 3: ¿Qué necesitas? -->
-            <div class="relative"> <!-- Añadido relative para posicionar el SVG -->
-                <label for="project_type" class="block text-sm font-medium text-text-muted mb-1">¿En qué puedo ayudarte? <span class="text-red-500">*</span></label>
-                <select id="project_type" name="Tipo de Proyecto" required
-                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light transition duration-150 ease-in-out appearance-none">
-                    <option value="" disabled selected class="text-gray-400">Selecciona el tipo de servicio</option>
-                    <option value="Entrevista">Entrevista, para trabajar en tu empresa</option>
-                    <option value="Consultoría IT">Consultoría IT y Optimización de Sistemas</option>
-                    <option value="Infraestructura Cloud">Infraestructura Cloud (AWS/Azure) y Virtualización</option>
-                    <option value="Soporte Técnico">Soporte Técnico (N3/N4) y Troubleshooting</option>
-                    <option value="Ciberseguridad">Ciberseguridad y Gestión de Acceso</option>
-                    <option value="Otro">Otro (Especificar en el detalle)</option>
-                </select>
-                <!-- Icono SVG de flecha hacia abajo -->
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-light mt-7">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
-            </div>
-
-            <!-- Campo 4: Cuéntame más sobre el proyecto -->
-            <div>
-                <label for="project_details" class="block text-sm font-medium text-text-muted mb-1">Cuéntame más detalles sobre lo que necesitas:</label>
-                <textarea id="project_details" name="Detalles del Proyecto" rows="4"
-                              placeholder="Describe brevemente el alcance, objetivos y plazos si los conoces."
-                              class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out"></textarea>
-            </div>
-
-            <!-- Campo 5: ¿Cuál es el presupuesto estimado? -->
-            <div class="relative"> <!-- Añadido relative para posicionar el SVG -->
-                <label for="budget" class="block text-sm font-medium text-text-muted mb-1">Presupuesto estimado (Opcional)</label>
-                <select id="budget" name="Presupuesto Estimado"
-                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light transition duration-150 ease-in-out appearance-none">
-                    <option value="" disabled selected class="text-gray-400">Selecciona un rango</option>
-                    <option value="Menos de 1.000 €">Menos de 1.000 €</option>
-                    <option value="1.000 € - 3.000 €">1.000 € - 3.000 €</option>
-                    <option value="3.000 € - 5.000 €">3.000 € - 5.000 €</option>
-                    <option value="Más de 5.000 €">Más de 5.000 €</option>
-                    <option value="Aún no lo sé">Aún no lo sé</option>
-                </select>
-                <!-- Icono SVG de flecha hacia abajo -->
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-light mt-7">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
-            </div>
-
-            <!-- Botón de Envío - Usando clase dinámica 'btn-accent' -->
-            <button type="submit"
-                    id="submit-button"
-                    class="w-full py-3 px-4 border border-transparent rounded-lg text-lg font-semibold text-text-light btn-accent focus:outline-none focus:ring-4 focus:ring-opacity-50 transition duration-150 ease-in-out shadow-lg">
-                Enviar Solicitud
-            </button>
-            <p id="loading-indicator" class="hidden text-center text-sm text-accent">Enviando...</p>
-
-        </form>
-
-        <!-- Pie de página con enlace de vuelta al portfolio/CV -->
-        <footer class="mt-8 text-center text-xs text-gray-500">
-            <p>
-                Volver al <a href="index.html" class="text-accent hover:text-blue-400 underline transition duration-150 ease-in-out">Portfolio Principal</a>.
-            </p>
-        </footer>
-    </div>
-
-    <script>
-        // Mapeo de nombres de color a valores HEX y utilidades de Tailwind
-        const colorMap = {
-            'blue': {
-                '500': '#3B82F6', // blue-500
-                '600': '#2563EB', // blue-600 (hover)
-                '400': '#60A5FA', // blue-400 (texto/enlace)
-                'ring': 'rgba(59, 130, 246, 0.5)',
-            },
-            'emerald': {
-                '500': '#10B981', // emerald-500
-                '600': '#059669', // emerald-600 (hover)
-                '400': '#34D399', // emerald-400 (texto/enlace)
-                'ring': 'rgba(16, 185, 129, 0.5)',
-            },
-            'violet': {
-                '500': '#8B5CF6', // violet-500
-                '600': '#7C3AED', // violet-600 (hover)
-                '400': '#A78BFA', // violet-400 (texto/enlace)
-                'ring': 'rgba(139, 92, 246, 0.5)',
-            },
-            'orange': {
-                '500': '#F97316', // orange-500
-                '600': '#EA580C', // orange-600 (hover)
-                '400': '#FB923C', // orange-400 (texto/enlace)
-                'ring': 'rgba(249, 115, 22, 0.5)',
-            }
-        };
-
-        const themeSwitcher = document.getElementById('theme-switcher');
-        const root = document.documentElement; // Acceder al :root para variables CSS
-
-        /**
-         * Aplica el tema de color seleccionado, actualizando variables CSS y localStorage.
-         * @param {string} colorName - El nombre del color (ej: 'blue', 'emerald').
-         */
-        function applyTheme(colorName) {
-            const colors = colorMap[colorName];
-            if (!colors) return;
-
-            // 1. Actualizar variables CSS en :root
-            root.style.setProperty('--accent-color-base', colorName);
-            root.style.setProperty('--accent-color-500', colors['500']);
-            root.style.setProperty('--accent-color-600', colors['600']);
-            root.style.setProperty('--accent-color-400', colors['400']);
-            root.style.setProperty('--accent-ring-color', colors['ring']);
-
-            // 2. Actualizar el indicador de carga y el enlace de footer (usando la clase dinámica)
-            const loadingIndicator = document.getElementById('loading-indicator');
-            const footerLink = document.querySelector('footer a');
-            
-            // Reemplazar la clase de color para el anillo de foco del botón de envío
-            const submitButton = document.getElementById('submit-button');
-            submitButton.classList.forEach(cls => {
-                if (cls.startsWith('focus:ring-')) {
-                    submitButton.classList.remove(cls);
-                }
-            });
-            // El anillo de foco está ahora manejado por la variable CSS en la clase .btn-accent y en el CSS de los inputs.
-
-            // 3. Guardar en localStorage
-            localStorage.setItem('themeColor', colorName);
-
-            // 4. Actualizar el ring visual en el selector
-            document.querySelectorAll('.color-swatch').forEach(swatch => {
-                swatch.classList.remove('ring-4', 'ring-offset-2');
-                if (swatch.dataset.color === colorName) {
-                    swatch.classList.add('ring-4', 'ring-offset-2');
-                }
-            });
-        }
-
-        // --- Lógica de Inicialización y Eventos ---
-
-        // 1. Cargar tema al inicio
-        const savedTheme = localStorage.getItem('themeColor') || 'blue'; // Por defecto, azul
-        applyTheme(savedTheme);
-
-        // 2. Añadir event listeners a los selectores de color
-        document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.addEventListener('click', () => {
-                const color = swatch.dataset.color;
-                applyTheme(color);
-            });
-        });
-
-        // 3. Lógica de envío de formulario usando la función Serverless de Vercel
-        document.getElementById('contact-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const form = document.getElementById('contact-form');
-            const successMessage = document.getElementById('success-message');
-            const errorMessage = document.getElementById('error-message');
-            const submitButton = document.getElementById('submit-button');
-            const loadingIndicator = document.getElementById('loading-indicator');
-
-            // Ocultar mensajes previos
-            successMessage.classList.add('hidden');
-            errorMessage.classList.add('hidden');
-
-            // 1. Deshabilitar y mostrar carga
-            submitButton.disabled = true;
-            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-            submitButton.textContent = 'Enviando...';
-            loadingIndicator.classList.remove('hidden');
-
-            const data = new FormData(form);
-            const url = form.action; // Ahora es '/api/send_email'
-
-            try {
-                // Envío real usando Fetch API a la función de Vercel
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: data,
-                    // CORRECCIÓN: Eliminamos el header 'Accept': 'application/json' si Vercel devuelve JSON.
-                    // Flask ya maneja el Content-Type para el JSON de respuesta.
-                });
-
-                // 2. Manejar respuesta
-                if (response.ok) {
-                    // Si la respuesta es 200 (OK) o 204 (No Content), asumimos éxito
-                    // Éxito
-                    form.classList.add('hidden'); // Ocultar el formulario
-                    successMessage.classList.remove('hidden'); // Mostrar el mensaje de éxito
-                    form.reset();
-                } else {
-                    // Error (incluye 400, 500, etc., que tu script Python devuelve)
-                    // Si la función de Python falla, devuelve un código != 200 y se activa este bloque.
-                    errorMessage.classList.remove('hidden');
-                    console.error('Error del servidor de Vercel:', response.status);
-
-                    // Opcional: Intentar leer el mensaje de error JSON de la función de Vercel (si lo configuraste así)
-                    const errorJson = await response.json().catch(() => ({}));
-                    if (errorJson.message) {
-                        document.querySelector('#error-message p.text-sm').textContent = errorJson.message;
-                    } else {
-                        document.querySelector('#error-message p.text-sm').textContent = `Hubo un error (${response.status}). Por favor, inténtalo de nuevo.`;
-                    }
-                }
-            } catch (error) {
-                // Error de red (ej. sin conexión o fallo de CORS si el backend no lo configuró bien)
-                errorMessage.classList.remove('hidden');
-                document.querySelector('#error-message p.text-sm').textContent = 'Error de red o CORS. Verifica la consola y el log de Vercel.';
-                console.error('Error de red al enviar el formulario:', error);
-            } finally {
-                // 3. Restaurar botón y ocultar carga después de la operación (éxito o error)
-                loadingIndicator.classList.add('hidden');
-                submitButton.disabled = false;
-                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                submitButton.textContent = 'Enviar Solicitud';
-                
-                // Si hubo un error, volvemos a mostrar el formulario para que el usuario pueda corregir
-                if (successMessage.classList.contains('hidden')) {
-                     form.classList.remove('hidden');
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+<!-- 
+    Se elimina el JavaScript anterior que manejaba el 'fetch' y las alertas,
+    ya que Formspree ahora gestiona la respuesta directamente con una página de éxito.
+-->

@@ -61,7 +61,7 @@
     .focus\:ring-primary-dynamic:focus { --tw-ring-color: var(--color-primary) !important; }
     .focus\:border-primary-dynamic:focus { border-color: var(--color-primary) !important; }
     
-    /* Nueva clase para el texto dinámico que aplica el hover */
+    /* Clase corregida para el texto dinámico que aplica el hover */
     .text-primary-dynamic-link { 
         color: var(--color-primary) !important; 
         transition: color 0.15s ease-in-out;
@@ -75,6 +75,7 @@
     .color-picker {
         position: absolute;
         top: 20px;
+        /* CORRECCIÓN DE ESPACIADO: Añadido margin-left para forzar separación si el título es largo */
         right: 20px;
         display: flex;
         gap: 8px;
@@ -107,11 +108,13 @@
     <!-- --------------------------------------- -->
     <!-- 1. Encabezado con Selector de Paleta de Colores -->
     <!-- --------------------------------------- -->
+    <!-- Aseguramos que el contenedor del título y picker tengan suficiente margen -->
     <div class="flex justify-between items-start mb-2">
-        <h1 class="text-3xl font-bold text-white">¡Empecemos a trabajar juntos!</h1>
+        <!-- Añadida clase mr-4 al título para dar espacio al picker si no hay espacio -->
+        <h1 class="text-3xl font-bold text-white mr-4">¡Empecemos a trabajar juntos!</h1>
         
-        <!-- Añadida clase 'mr-4' para separar del título -->
-        <div id="colorPicker" class="color-picker mr-4" title="Seleccionar color de acento">
+        <!-- El selector de color ya tiene la posición absoluta definida en CSS -->
+        <div id="colorPicker" class="color-picker" title="Seleccionar color de acento">
             <!-- Los círculos se inyectan aquí con JavaScript -->
         </div>
     </div>
@@ -232,7 +235,7 @@
     const form = document.getElementById('contactForm');
     const button = document.getElementById('submitButton');
     const colorPicker = document.getElementById('colorPicker');
-    const portfolioLink = document.getElementById('portfolioLink'); // Nuevo elemento
+    const portfolioLink = document.getElementById('portfolioLink'); 
     
     // ----------------------------------------------------
     // 1. GESTIÓN DE COLORES
@@ -249,13 +252,9 @@
         primaryColor = palette.primary;
         darkColor = palette.dark;
         
-        // Aplicar a las variables CSS
+        // Aplicar a las variables CSS en el elemento raíz (document.documentElement)
         root.style.setProperty('--color-primary', primaryColor);
         root.style.setProperty('--color-primary-dark', darkColor);
-        
-        // **CORRECCIÓN:** Forzar la actualización del color del enlace del Portafolio
-        // Esto se soluciona principalmente con la clase CSS .text-primary-dynamic-link,
-        // pero podemos asegurarnos de que el borde del círculo seleccionado también se actualice.
         
         // Guardar la clave en localStorage
         localStorage.setItem('themeColor', key);
@@ -283,7 +282,9 @@
         // Asignar el evento click
         colorPicker.querySelectorAll('.color-circle').forEach(circle => {
             circle.addEventListener('click', (e) => {
-                applyColor(e.target.dataset.colorKey);
+                // Usamos dataset.colorKey en el elemento div, no en el target (por si tiene hijos)
+                const key = e.currentTarget.dataset.colorKey; 
+                applyColor(key);
             });
         });
     }
@@ -295,13 +296,14 @@
     function updateColorPicker(selectedKey) {
         colorPicker.querySelectorAll('.color-circle').forEach(circle => {
             circle.classList.remove('selected');
-            // Se asegura de que el brillo del borde coincida con el color primario
+            
+            // Restablecer el box-shadow por defecto
             circle.style.boxShadow = `0 0 5px rgba(0,0,0,0.5)`;
 
             if (circle.dataset.colorKey === selectedKey) {
                 circle.classList.add('selected');
                 const selectedColor = COLOR_PALETTES[selectedKey].primary;
-                // Aplicar el brillo dinámico al círculo seleccionado
+                // Aplicar el brillo dinámico al círculo seleccionado usando el color primario
                 circle.style.boxShadow = `0 0 10px ${selectedColor}`;
             }
         });
@@ -336,8 +338,9 @@
         // Mostrar estado de carga y cambiar estilo del botón
         button.disabled = true;
         button.textContent = 'Enviando...';
+        // Quitamos las clases dinámicas para que no interfieran con el color gris temporal
         button.classList.remove('bg-primary-dynamic', 'hover:bg-primary-dark-dynamic');
-        button.classList.add('bg-gray-500');
+        button.classList.add('bg-gray-500', 'cursor-not-allowed');
 
         try {
             const response = await fetch(FORMSPREE_ENDPOINT, {
@@ -376,11 +379,12 @@
             console.error('Error de conexión o fetch:', error);
             showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
         } finally {
-            // Restablecer el botón solo si NO fue un éxito
+            // Restaurar el botón solo si NO fue un éxito
             if (successMessage.classList.contains('hidden')) {
                 button.disabled = false;
                 button.textContent = 'Enviar Solicitud';
-                button.classList.remove('bg-gray-500');
+                button.classList.remove('bg-gray-500', 'cursor-not-allowed');
+                // IMPORTANTE: Volver a añadir las clases dinámicas para que el color se aplique correctamente
                 button.classList.add('bg-primary-dynamic', 'hover:bg-primary-dark-dynamic');
             }
         }

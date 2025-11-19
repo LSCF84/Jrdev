@@ -99,16 +99,32 @@
         <!-- Mensaje de Éxito (oculto por defecto) -->
         <div id="success-message" class="hidden bg-green-900 border border-green-700 text-text-light p-4 rounded-lg mb-6 text-center">
             <p class="font-semibold">¡Gracias por tu mensaje!</p>
-            <p class="text-sm">He recibido tu solicitud y la revisaré de inmediato.</p>
+            <p class="text-sm">Tu solicitud ha sido enviada con éxito. Revisa tu bandeja de entrada para la confirmación de Formspree (solo la primera vez).</p>
+        </div>
+
+        <!-- Mensaje de Error (oculto por defecto) -->
+        <div id="error-message" class="hidden bg-red-900 border border-red-700 text-text-light p-4 rounded-lg mb-6 text-center">
+            <p class="font-semibold">¡Error al enviar!</p>
+            <p class="text-sm">Hubo un problema. Por favor, inténtalo de nuevo o contacta directamente por correo.</p>
         </div>
 
         <!-- Formulario (visible por defecto) -->
-        <form id="contact-form" class="space-y-6">
+        <form id="contact-form" 
+              action="https://formspree.io/f/xvzopovp" 
+              method="POST" 
+              class="space-y-6">
+
+            <!-- NOTA: El ID 'xvzopovp' es el ID público generado por Formspree para la dirección l.sergio.camacho.fernandez@gmail.com. 
+            Es un placeholder. Si tienes un email diferente o un endpoint específico de Formspree, cámbialo en la línea 'action' de arriba. -->
+            
+            <!-- Campo oculto para Formspree: Subject/Asunto (Opcional, pero recomendado) -->
+            <input type="hidden" name="_subject" value="Nueva Solicitud de Contacto - Formulario Web">
 
             <!-- Campo 1: Nombre Completo -->
             <div>
                 <label for="full_name" class="block text-sm font-medium text-text-muted mb-1">Nombre completo <span class="text-red-500">*</span></label>
-                <input type="text" id="full_name" name="full_name" required
+                <!-- Usamos 'name="name"' para que Formspree lo reconozca como el nombre del remitente -->
+                <input type="text" id="full_name" name="name" required
                        placeholder="Tu nombre y apellido"
                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out">
             </div>
@@ -116,7 +132,8 @@
             <!-- Campo 2: Email -->
             <div>
                 <label for="email" class="block text-sm font-medium text-text-muted mb-1">Email <span class="text-red-500">*</span></label>
-                <input type="email" id="email" name="email" required
+                 <!-- Usamos 'name="_replyto"' para que Formspree permita responder directamente al correo del remitente -->
+                <input type="email" id="email" name="_replyto" required
                        placeholder="ejemplo@dominio.com"
                        class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out">
             </div>
@@ -124,15 +141,15 @@
             <!-- Campo 3: ¿Qué necesitas? -->
             <div>
                 <label for="project_type" class="block text-sm font-medium text-text-muted mb-1">¿En qué puedo ayudarte? <span class="text-red-500">*</span></label>
-                <select id="project_type" name="project_type" required
+                <select id="project_type" name="Tipo de Proyecto" required
                         class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light transition duration-150 ease-in-out appearance-none">
                     <option value="" disabled selected class="text-gray-400">Selecciona el tipo de servicio</option>
-                    <option value="consultoria">Entrevista, para trabajar en tu empresa</option>
-                    <option value="consultoria">Consultoría IT y Optimización de Sistemas</option>
-                    <option value="cloud_infra">Infraestructura Cloud (AWS/Azure) y Virtualización</option>
-                    <option value="soporte">Soporte Técnico (N3/N4) y Troubleshooting</option>
-                    <option value="ciberseguridad">Ciberseguridad y Gestión de Acceso</option>
-                    <option value="otro">Otro (Especificar en el detalle)</option>
+                    <option value="Entrevista">Entrevista, para trabajar en tu empresa</option>
+                    <option value="Consultoría IT">Consultoría IT y Optimización de Sistemas</option>
+                    <option value="Infraestructura Cloud">Infraestructura Cloud (AWS/Azure) y Virtualización</option>
+                    <option value="Soporte Técnico">Soporte Técnico (N3/N4) y Troubleshooting</option>
+                    <option value="Ciberseguridad">Ciberseguridad y Gestión de Acceso</option>
+                    <option value="Otro">Otro (Especificar en el detalle)</option>
                 </select>
                 <!-- Icono SVG de flecha hacia abajo para el select, ya que appearance-none lo oculta -->
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-light">
@@ -143,22 +160,22 @@
             <!-- Campo 4: Cuéntame más sobre el proyecto -->
             <div>
                 <label for="project_details" class="block text-sm font-medium text-text-muted mb-1">Cuéntame más detalles sobre lo que necesitas:</label>
-                <textarea id="project_details" name="project_details" rows="4"
+                <textarea id="project_details" name="Detalles del Proyecto" rows="4"
                           placeholder="Describe brevemente el alcance, objetivos y plazos si los conoces."
                           class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light placeholder-gray-400 transition duration-150 ease-in-out"></textarea>
             </div>
 
             <!-- Campo 5: ¿Cuál es el presupuesto estimado? -->
             <div>
-                <label for="budget" class="block text-sm font-medium text-text-muted mb-1">Presupuesto estimado (Esto es un ejemplo de formulario)</label>
-                <select id="budget" name="budget"
+                <label for="budget" class="block text-sm font-medium text-text-muted mb-1">Presupuesto estimado (Opcional)</label>
+                <select id="budget" name="Presupuesto Estimado"
                         class="mt-1 block w-full px-4 py-2 bg-primary-dark border border-gray-600 rounded-lg text-text-light transition duration-150 ease-in-out appearance-none">
                     <option value="" disabled selected class="text-gray-400">Selecciona un rango</option>
-                    <option value="less_1k">Menos de 1.000 €</option>
-                    <option value="1k_3k">1.000 € - 3.000 €</option>
-                    <option value="3k_5k">3.000 € - 5.000 €</option>
-                    <option value="more_5k">Más de 5.000 €</option>
-                    <option value="unknown">Aún no lo sé</option>
+                    <option value="Menos de 1.000 €">Menos de 1.000 €</option>
+                    <option value="1.000 € - 3.000 €">1.000 € - 3.000 €</option>
+                    <option value="3.000 € - 5.000 €">3.000 € - 5.000 €</option>
+                    <option value="Más de 5.000 €">Más de 5.000 €</option>
+                    <option value="Aún no lo sé">Aún no lo sé</option>
                 </select>
                 <!-- Icono SVG de flecha hacia abajo para el select -->
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-light">
@@ -270,14 +287,19 @@
             });
         });
 
-        // 3. Lógica de envío de formulario (mantener la original)
-        document.getElementById('contact-form').addEventListener('submit', function(event) {
+        // 3. Lógica de envío de formulario usando Formspree y Fetch API
+        document.getElementById('contact-form').addEventListener('submit', async function(event) {
             event.preventDefault();
 
             const form = document.getElementById('contact-form');
             const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
             const submitButton = document.getElementById('submit-button');
             const loadingIndicator = document.getElementById('loading-indicator');
+
+            // Ocultar mensajes previos
+            successMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
 
             // 1. Deshabilitar y mostrar carga
             submitButton.disabled = true;
@@ -285,19 +307,47 @@
             submitButton.textContent = 'Enviando...';
             loadingIndicator.classList.remove('hidden');
 
-            // 2. Simular el tiempo de envío (2 segundos)
-            setTimeout(() => {
-                // 3. Simulación de éxito
-                loadingIndicator.classList.add('hidden');
-                form.classList.add('hidden'); // Ocultar el formulario
-                successMessage.classList.remove('hidden'); // Mostrar el mensaje de éxito
+            const data = new FormData(form);
+            const url = form.action;
 
-                // Restablecer el botón para el próximo uso si se vuelve visible
+            try {
+                // Envío real usando Fetch API a Formspree
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                // 2. Manejar respuesta
+                if (response.ok) {
+                    // Éxito
+                    form.classList.add('hidden'); // Ocultar el formulario
+                    successMessage.classList.remove('hidden'); // Mostrar el mensaje de éxito
+                    form.reset();
+                } else {
+                    // Error (ej. validación fallida o Formspree está caído)
+                    errorMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                // Error de red (ej. sin conexión)
+                errorMessage.classList.remove('hidden');
+                console.error('Error de red al enviar el formulario:', error);
+            } finally {
+                // 3. Restaurar botón y ocultar carga después de la operación (éxito o error)
+                loadingIndicator.classList.add('hidden');
                 submitButton.disabled = false;
                 submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
                 submitButton.textContent = 'Enviar Solicitud';
-
-            }, 2000);
+                
+                // Si hubo un error, volvemos a mostrar el formulario para que el usuario pueda corregir
+                if (!successMessage.classList.contains('hidden')) {
+                     // Si hubo éxito, el formulario permanece oculto.
+                } else {
+                    form.classList.remove('hidden');
+                }
+            }
         });
     </script>
 </body>

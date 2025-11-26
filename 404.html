@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - ¡El Enlace se ha Desmaterializado!</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo para asegurar que el cuerpo ocupe toda la altura */
+        html, body {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans flex items-center justify-center min-h-full p-4">
+
+    <!-- Contenedor Principal (Tarjeta Estilo Dev) -->
+    <div class="max-w-xl w-full bg-gray-800 p-8 md:p-12 rounded-2xl shadow-2xl border-t-4 border-indigo-500 transform hover:scale-[1.01] transition duration-300 ease-in-out">
+        
+        <div class="text-center">
+            <!-- Código de Error Grande y Llamativo -->
+            <p class="text-8xl md:text-9xl font-extrabold text-indigo-500 mb-6">404</p>
+            
+            <!-- Título Humoroístico -->
+            <h1 class="text-3xl md:text-4xl font-bold text-red-400 mb-4">
+                ¡Oops! El servidor ha perdido tu página.
+            </h1>
+            
+            <!-- Mensaje Principal -->
+            <p class="text-gray-300 text-lg mb-8">
+                Parece que la URL que has intentado cargar ha decidido tomarse unas vacaciones sin avisar. O quizás la buscaste en un disquete.
+            </p>
+
+            <!-- Sección de Diagnóstico con Icono -->
+            <div class="bg-gray-700 p-4 rounded-lg mb-8 text-left border border-gray-600">
+                <p class="font-mono text-sm text-yellow-400 flex items-center">
+                    <!-- Icono SVG de advertencia -->
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    &lt;Error/&gt;:
+                </p>
+                <code class="block whitespace-pre-wrap text-gray-400 mt-2">
+                    // Causa probable:
+                    const page = database.getPage(location.pathname);
+                    if (page === undefined) {
+                        throw new NotFoundException("Ruta no implementada o borrada por un bug exótico.");
+                    }
+                </code>
+            </div>
+
+            <!-- Botón de Acción Principal -->
+            <a href="/" class="inline-block px-8 py-3 bg-indigo-600 text-white font-semibold rounded-full shadow-lg hover:bg-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                Volver a la Tierra Prometida (Inicio)
+            </a>
+            
+            <!-- Enlace Secundario -->
+            <p class="mt-6 text-sm text-gray-400">
+                Si el problema persiste, es culpa del GitHub.
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

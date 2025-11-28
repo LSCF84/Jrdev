@@ -1,28 +1,73 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root{
+    --btn-color: #fdfdfd;/* button color*/
+    --btn-bg: #155eef;/* button bg color*/
 
-    --btn-color: #fdfdfd;/* button color*/
-    --btn-bg: #155eef;/* button bg color*/
-
-    --primary-text-color: #155eef;
-    --link-hover: #155eef;
-    --input-hover-bd-color: #155eef;
+    --primary-text-color: #155eef;
+    --link-hover: #155eef;
+    --input-hover-bd-color: #155eef;
 }
 
 
 html {
-    scroll-behavior: smooth;
-    font-family: "Roboto", sans-serif;
+    scroll-behavior: smooth;
+    font-family: "Roboto", sans-serif;
 }
 
 header{
-    /* background-color: #fff;
-    color: #000; */
+    /* background-color: #fff;
+    color: #000; */
 }
 
-
-
 .primary-text-color{
+    color: var(--primary-text-color);
+}
+
+/* ------------------------------------------------ */
+/* --- ESTILOS ESPECÍFICOS DEL BANNER DE COOKIES --- */
+/* ------------------------------------------------ */
+
+#cookie-banner {
+    /* Estas propiedades aseguran que el banner mantenga el estilo base de Tailwind
+       que no se usa directamente en esta hoja de estilos, como el fondo y la sombra */
+    background-color: rgb(51 65 85); /* tw-bg-slate-700 */
+    color: #fff;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+#cookie-banner a {
+    /* Estilo para el enlace de la Política de Cookies usando tu color primario */
     color: var(--primary-text-color);
+    font-weight: 600;
+    margin-left: 0.25rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+#cookie-banner a:hover {
+    text-decoration: underline;
+}
+
+#cookie-banner #accept-cookies {
+    /* Estilo para el botón de Aceptar (simulando btn-primary) usando tus variables */
+    background-color: var(--primary-text-color) !important;
+    color: var(--btn-color); /* Generalmente blanco/claro */
+    border: 1px solid var(--primary-text-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    transition: background-color 0.3s;
+    /* Asegura que el botón se muestre correctamente */
+    display: inline-block; 
+}
+
+#cookie-banner #accept-cookies:hover {
+    filter: brightness(1.1);
 }

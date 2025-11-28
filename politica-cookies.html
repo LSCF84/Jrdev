@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es" data-theme="warning" data-mode="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Política de Cookies | L.S.C.F</title>
+        <meta name="description" content="Política de Cookies del sitio web de L. Sergio Camacho" />
+        <link
+            rel="shortcut icon"
+            href="./assets/logo.png"
+            type="image/x-icon"
+        />
+
+        <link rel="stylesheet" href="./css/tailwind-build.css" />
+        <link rel="stylesheet" href="css/index.css" />
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+            integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+    </head>
+    <body
+        class="tw-flex tw-w-full tw-flex-col tw-bg-[#fff] tw-text-black dark:tw-bg-slate-800 dark:tw-text-white"
+    >
+        <main class="tw-min-h-screen tw-w-full tw-p-8 max-md:tw-p-4">
+            
+            <header class="tw-flex tw-justify-between tw-items-center tw-mb-8 tw-border-b tw-pb-4">
+                <a href="./index.html" class="link tw-text-xl tw-font-bold hover:tw-text-primary">
+                    <i class="bi bi-arrow-left-short tw-text-3xl"></i> Volver al Inicio
+                </a>
+                
+                <div class="tw-flex tw-place-items-center tw-gap-2">
+                    <select
+                        onchange="switchTheme()"
+                        id="theme-selector"
+                        class="input !tw-h-fit !tw-p-1 tw-text-black dark:tw-text-white"
+                    >
+                        <option value="primary">Primary</option>
+                        <option value="warning" selected>warning</option>
+                        <option value="success">success</option>
+                    </select>
+
+                    <button class="tw-w-[30px]" onclick="toggleMode()">
+                        <i class="bi bi-sun-fill" id="toggle-mode-icon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="tw-max-w-4xl tw-mx-auto tw-space-y-8 tw-py-8">
+                <h1 class="tw-text-4xl tw-font-extrabold tw-text-primary tw-border-b-2 tw-border-primary tw-pb-2 max-md:tw-text-3xl">
+                    Política de Cookies
+                </h1>
+                
+                <p class="tw-text-gray-700 dark:tw-text-gray-300">
+                    La presente Política de Cookies tiene como finalidad informarle de manera clara y precisa sobre las cookies que se utilizan en el sitio web de L. Sergio Camacho (L.S.C.F).
+                </p>
+
+                <section class="tw-space-y-4">
+                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-900 dark:tw-text-gray-100">1. ¿Qué son las Cookies?</h2>
+                    <p>
+                        Una **cookie** es un pequeño archivo de texto que se descarga en su equipo o dispositivo al acceder a determinadas páginas web. Las cookies permiten a una página web, entre otras cosas, almacenar y recuperar información sobre los hábitos de navegación de un usuario o de su equipo, y, dependiendo de la información que contengan y de la forma en que utilice su equipo, pueden utilizarse para reconocer al usuario y garantizar ciertas funcionalidades.
+                    </p>
+                </section>
+
+                <section class="tw-space-y-4">
+                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-900 dark:tw-text-gray-100">2. Tipos de Cookies Utilizadas</h2>
+                    <p>
+                        Este sitio web utiliza cookies propias, las cuales son esenciales para su funcionamiento y para recordar las preferencias del usuario:
+                    </p>
+                    <ul class="tw-list-disc tw-list-inside tw-space-y-3 tw-pl-4">
+                        <li class="tw-font-semibold tw-text-gray-900 dark:tw-text-gray-100">Cookies Técnicas o Necesarias:</li>
+                        <p class="tw-ml-4">
+                            Son las estrictamente necesarias para la navegación por el sitio web y la utilización de las diferentes opciones o servicios que en ella existen.
+                        </p>
+                        
+                        <li class="tw-font-semibold tw-text-gray-900 dark:tw-text-gray-100">Cookies de Preferencia o Personalización:</li>
+                        <p class="tw-ml-4">
+                            Permiten al sitio web recordar información para que el usuario acceda al servicio con ciertas características predefinidas de carácter general, como la configuración del tema de color (`data-theme`) y el modo (oscuro/claro) de visualización (`data-mode`). También incluye la cookie **`cookieConsent`** para recordar su decisión sobre el uso de cookies.
+                        </p>
+                        
+                        <li class="tw-font-semibold tw-text-gray-900 dark:tw-text-gray-100">Cookies de Análisis o Medición:</li>
+                        <p class="tw-ml-4">
+                            <strong>Este sitio web NO utiliza actualmente cookies de análisis de terceros (como Google Analytics)</strong>. Si se utilizasen en el futuro, se solicitaría su consentimiento explícito previo y esta política sería actualizada para detallar su uso.
+                        </p>
+                    </ul>
+                </section>
+                
+                <section class="tw-space-y-4">
+                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-900 dark:tw-text-gray-100">3. Cookies Específicas en este Sitio</h2>
+                    <table class="tw-w-full tw-text-sm tw-text-left tw-text-gray-500 dark:tw-text-gray-400 tw-border tw-border-gray-200 dark:tw-border-gray-700">
+                        <thead class="tw-text-xs tw-text-gray-700 tw-uppercase tw-bg-gray-50 dark:tw-bg-gray-700 dark:tw-text-gray-300">
+                            <tr>
+                                <th scope="col" class="tw-py-3 tw-px-6">Nombre</th>
+                                <th scope="col" class="tw-py-3 tw-px-6">Propósito</th>
+                                <th scope="col" class="tw-py-3 tw-px-6">Duración</th>
+                                <th scope="col" class="tw-py-3 tw-px-6">Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tw-bg-white dark:tw-bg-slate-800 tw-border-b dark:tw-border-gray-700">
+                                <td class="tw-py-4 tw-px-6 tw-font-medium tw-text-gray-900 dark:tw-text-white">`cookieConsent`</td>
+                                <td class="tw-py-4 tw-px-6">Almacena la preferencia del usuario sobre la aceptación o rechazo de cookies.</td>
+                                <td class="tw-py-4 tw-px-6">1 año</td>
+                                <td class="tw-py-4 tw-px-6">Propia (Preferencia)</td>
+                            </tr>
+                            <tr class="tw-bg-white dark:tw-bg-slate-800 tw-border-b dark:tw-border-gray-700">
+                                <td class="tw-py-4 tw-px-6 tw-font-medium tw-text-gray-900 dark:tw-text-white">`data-theme`</td>
+                                <td class="tw-py-4 tw-px-6">Almacena el tema de color seleccionado (e.g., warning, primary).</td>
+                                <td class="tw-py-4 tw-px-6">Persistente</td>
+                                <td class="tw-py-4 tw-px-6">Propia (Técnica/Preferencia)</td>
+                            </tr>
+                            <tr class="tw-bg-white dark:tw-bg-slate-800">
+                                <td class="tw-py-4 tw-px-6 tw-font-medium tw-text-gray-900 dark:tw-text-white">`data-mode`</td>
+                                <td class="tw-py-4 tw-px-6">Almacena la preferencia de modo de visualización (dark/light).</td>
+                                <td class="tw-py-4 tw-px-6">Persistente</td>
+                                <td class="tw-py-4 tw-px-6">Propia (Técnica/Preferencia)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="tw-space-y-4">
+                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-900 dark:tw-text-gray-100">4. Gestión y Desactivación de Cookies</h2>
+                    <p>
+                        Usted puede permitir, bloquear o eliminar las cookies instaladas en su equipo mediante la configuración de las opciones de su navegador de Internet. Tenga en cuenta que la desactivación de algunas cookies podría hacer que la funcionalidad del sitio web no sea óptima.
+                    </p>
+                    <p>A continuación le proporcionamos enlaces a las instrucciones de los navegadores más comunes:</p>
+                    <ul class="tw-list-disc tw-list-inside tw-space-y-2 tw-pl-4">
+                        <li><a href="https://support.google.com/chrome/answer/95647?hl=es" target="_blank" class="tw-text-primary hover:tw-underline">Google Chrome</a></li>
+                        <li><a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-que-los-sitios-we" target="_blank" class="tw-text-primary hover:tw-underline">Mozilla Firefox</a></li>
+                        <li><a href="https://support.microsoft.com/es-es/topic/eliminar-y-administrar-cookies-16108138-8c19-4b68-80f4-5262c7674205" target="_blank" class="tw-text-primary hover:tw-underline">Microsoft Edge / Internet Explorer</a></li>
+                        <li><a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" class="tw-text-primary hover:tw-underline">Safari</a></li>
+                    </ul>
+                </section>
+                
+                <section class="tw-space-y-3">
+                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-900 dark:tw-text-gray-100">5. Actualización de la Política</h2>
+                    <p>
+                        Esta Política de Cookies podrá ser modificada cuando así lo exija la legislación vigente o cuando se produzca alguna variación en la tipología de cookies utilizadas en el sitio web. Le recomendamos revisar esta política cada vez que acceda al sitio.
+                    </p>
+                    <p class="tw-text-sm tw-pt-1 tw-text-gray-600 dark:tw-text-gray-400">
+                        Fecha de última actualización: Noviembre de 2025.
+                    </p>
+                </section>
+            </div>
+        </main>
+        
+        <script>
+            // Función para el modo oscuro/claro (Dark Mode)
+            function toggleMode() {
+                const html = document.documentElement;
+                const icon = document.getElementById('toggle-mode-icon');
+                if (html.getAttribute('data-mode') === 'dark') {
+                    html.setAttribute('data-mode', 'light');
+                    if (icon) icon.className = 'bi bi-moon-fill';
+                } else {
+                    html.setAttribute('data-mode', 'dark');
+                    if (icon) icon.className = 'bi bi-sun-fill';
+                }
+            }
+
+            // Función para cambiar el tema de color
+            function switchTheme() {
+                const selector = document.getElementById('theme-selector');
+                const selectedTheme = selector.value;
+                document.documentElement.setAttribute('data-theme', selectedTheme);
+            }
+        </script>
+        
+        <script src="./index.js"></script> 
+    </body>
+</html>

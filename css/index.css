@@ -36,12 +36,13 @@ header{
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 100;
-    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1);
+    
+    /* 🚀 CORRECCIONES APLICADAS 🚀 */
+    z-index: 9999; /* Corregido: Máxima prioridad para que no se oculte */
+    text-align: center; /* Corregido: Centra el contenido */
+    display: block; /* Asegura que el contenedor esté visible */
     
-    /* 🔑 CORRECCIÓN DE CENTRADO APLICADA AQUÍ 🔑 */
-    /* Centra el texto y los elementos 'inline' como el botón en el banner */
-    text-align: center;
+    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 #cookie-banner a {

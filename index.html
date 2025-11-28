@@ -32,7 +32,7 @@
         class="tw-flex tw-w-full tw-flex-col tw-bg-[#fff] tw-text-black dark:tw-bg-slate-800 dark:tw-text-white lg:tw-h-[100vh]"
     >
         <main
-            class="tw-flex tw-h-full tw-w-full max-lg:tw-flex-col""
+            class="tw-flex tw-h-full tw-w-full max-lg:tw-flex-col"
         >
             <section
                 class="tw-flex tw-h-full tw-w-[450px] tw-flex-col tw-place-items-center tw-gap-4 tw-p-4 max-lg:tw-w-full lg:tw-shadow-xl lg:dark:tw-shadow-gray-600 lg:tw-sticky lg:tw-top-0"
@@ -322,7 +322,7 @@
                                             Ejecución integral de la instalación
 											y puesta en marcha de surtidores de combustible,
 											incluyendo configuración técnica de componentes
-											eléctricos y mecánicos.  Realicé la configuración
+											eléctricos y mecánicos.  Realicé la configuración
 											avanzada de consolas de monitoreo de tanques y la
 											implementación de cableado estructurado.
 											Diagnóstico y reparación eficiente de fallos
@@ -347,7 +347,7 @@
                                         <p class="">
                                             Experto en diagnóstico y reparación de hardware
 											y software en una amplia gama de equipos informáticos
-											y dispositivos móviles.  Gestión eficiente
+											y dispositivos móviles.  Gestión eficiente
 											de la cadena de suministro, incluyendo pedidos y
 											control de inventario de componentes críticos.
 											Instalación, configuración y personalización
@@ -491,6 +491,13 @@
                                     </div>
                                 </div>
 								<div
+                                    class="timeline-container tw-relative tw-mb-8"
+                                >
+                                    <div
+                                        class="tw-flex tw-max-w-[550px] tw-flex-col tw-gap-2 tw-p-1 max-lg:tw-max-w-[320px]"
+                                    >
+                                        </div>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -520,11 +527,11 @@
 
         <div id="cookie-banner" class="tw-fixed tw-bottom-0 tw-left-0 tw-right-0 tw-bg-slate-700 tw-text-white tw-p-4 tw-shadow-2xl tw-z-[100] tw-hidden">
             <div class="tw-max-w-7xl tw-mx-auto tw-flex tw-flex-col md:tw-flex-row tw-items-center tw-justify-between tw-gap-3">
-                <p class="tw-text-sm tw-text-center md:tw-text-left">
+                <p class="tw-text-sm tw-text-center md:tw-text-left tw-flex-1">
                     🍪 Este sitio utiliza cookies para mejorar la experiencia de usuario y realizar análisis de tráfico. Al hacer clic en **"Aceptar"**, aceptas nuestra política de cookies.
                     <a href="#" class="tw-text-primary tw-font-semibold hover:tw-underline tw-ml-1">Política de Cookies</a>
                 </p>
-                <button id="accept-cookies" class="btn-primary !tw-bg-primary !tw-text-white tw-whitespace-nowrap tw-px-6 tw-py-2 tw-text-sm">
+                <button id="accept-cookies" class="tw-px-6 tw-py-2 tw-text-sm tw-font-medium tw-rounded-md tw-whitespace-nowrap tw-mt-2 md:tw-mt-0">
                     Aceptar
                 </button>
             </div>
@@ -552,11 +559,11 @@
             const acceptButton = document.getElementById('accept-cookies');
             const cookieName = 'cookies_accepted';
 
-            // 1. Verificar si el usuario ya aceptó las cookies
+            // 1. Verificar si el usuario ya aceptó las cookies (usando localStorage)
             const hasAccepted = localStorage.getItem(cookieName);
 
             if (!hasAccepted) {
-                // Si no ha aceptado, mostramos el banner (removiendo la clase 'tw-hidden')
+                // Si no ha aceptado, mostramos el banner
                 banner.classList.remove('tw-hidden');
             }
 
@@ -576,4 +583,4 @@
             });
         });
     </script>
-    </html>
+</html>

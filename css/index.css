@@ -1,27 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root{
-    --btn-color: #fdfdfd;/* button color*/
-    --btn-bg: #155eef;/* button bg color*/
+    --btn-color: #fdfdfd;/* button color*/
+    --btn-bg: #155eef;/* button bg color*/
 
-    --primary-text-color: #155eef;
-    --link-hover: #155eef;
-    --input-hover-bd-color: #155eef;
+    --primary-text-color: #f59e0b; /* Ajusté el color primario para que coincida con el amarillo/naranja de la captura */
+    --link-hover: #155eef;
+    --input-hover-bd-color: #155eef;
 }
 
-
 html {
-    scroll-behavior: smooth;
-    font-family: "Roboto", sans-serif;
+    scroll-behavior: smooth;
+    font-family: "Roboto", sans-serif;
 }
 
 header{
-    /* background-color: #fff;
-    color: #000; */
+    /* background-color: #fff;
+    color: #000; */
 }
 
 .primary-text-color{
-    color: var(--primary-text-color);
+    color: var(--primary-text-color);
 }
 
 /* ------------------------------------------------ */
@@ -29,48 +28,71 @@ header{
 /* ------------------------------------------------ */
 
 #cookie-banner {
-    background-color: rgb(51 65 85); /* tw-bg-slate-700 */
-    color: #fff;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    
-    /* 🚀 ESTILOS CORREGIDOS: VISIBILIDAD y CENTRADO 🚀 */
-    z-index: 9999; /* Asegura que esté en la capa superior y visible */
-    text-align: center; /* Centra el texto y el botón */
-    display: block; /* Asegura que no esté oculto */
+    background-color: rgb(51 65 85); /* tw-bg-slate-700 */
+    color: #fff;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     
-    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1);
+    /* 🚀 ESTILOS CORREGIDOS: ¡Usamos Flexbox para no anular el HTML! 🚀 */
+    z-index: 9999; 
+    display: flex; /* CAMBIADO: Reemplaza 'block' para mantener alineación horizontal */
+    flex-wrap: wrap; /* Asegura el ajuste en móviles */
+    align-items: center; /* Alineación vertical */
+    justify-content: center; /* Centrado horizontal */
+    gap: 1rem; /* Espacio entre el texto y los botones (simula tw-gap-4) */
+    
+    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+#cookie-banner p {
+    margin: 0; /* Eliminar margen predeterminado del párrafo */
+    text-align: center; /* Centrar el texto en general */
 }
 
 #cookie-banner a {
-    /* Estilo para el enlace de la Política de Cookies usando tu color primario */
-    color: var(--primary-text-color);
-    font-weight: 600;
-    margin-left: 0.25rem;
-    text-decoration: none;
-    transition: all 0.2s;
+    /* Estilo para el enlace de la Política de Cookies usando tu color primario */
+    color: var(--primary-text-color);
+    font-weight: 600;
+    margin-left: 0.25rem;
+    text-decoration: none;
+    transition: all 0.2s;
 }
 
 #cookie-banner a:hover {
-    text-decoration: underline;
+    text-decoration: underline;
+}
+
+#cookie-banner #accept-cookies,
+#cookie-banner #decline-cookies {
+    /* Estilos base para ambos botones */
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    transition: background-color 0.3s, border-color 0.3s;
+    display: inline-block;
 }
 
 #cookie-banner #accept-cookies {
-    /* Estilo para el botón de Aceptar (simulando btn-primary) usando tus variables */
-    background-color: var(--primary-text-color) !important;
-    color: var(--btn-color); /* Generalmente blanco/claro */
-    border: 1px solid var(--primary-text-color);
-    padding: 0.5rem 1.5rem;
-    border-radius: 0.375rem; /* rounded-md */
-    font-size: 0.875rem; /* text-sm */
-    transition: background-color 0.3s;
-    /* Asegura que el botón se muestre correctamente */
-    display: inline-block; 
+    /* Estilo para el botón de Aceptar (simulando btn-primary) usando tus variables */
+    background-color: var(--primary-text-color) !important;
+    color: var(--btn-color); 
+    border: 1px solid var(--primary-text-color);
 }
 
 #cookie-banner #accept-cookies:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.1);
+}
+
+#cookie-banner #decline-cookies {
+    /* Estilo para el botón de Rechazar */
+    background-color: transparent !important;
+    color: var(--btn-color); 
+    border: 1px solid var(--btn-color);
+}
+
+#cookie-banner #decline-cookies:hover {
+    background-color: rgb(55 65 81) !important; /* Un gris oscuro para hover */
 }

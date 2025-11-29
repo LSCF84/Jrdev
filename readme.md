@@ -75,3 +75,7 @@ Si tienes alguna pregunta, oportunidad de colaboración o simplemente quieres sa
 * **Correo Electrónico:** l.sergio.camacho.fernandez@gmail.com
 
 ---
+
+## 📝 Licencia
+
+Este proyecto está bajo la licencia **MIT**.
